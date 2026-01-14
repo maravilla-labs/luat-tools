@@ -65,7 +65,9 @@ static DIRECTIVE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{@[^}]*\}
 // and filter out control flow/directives/comments in post-processing
 static MUSTACHE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{[^}]+\}"#).unwrap());
 
-static LUAT_COMMENT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{/\*.*?\*/\}"#).unwrap());
+static LUAT_COMMENT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"(?s)\{/\*.*?\*/\}"#).unwrap());
+
+static LUAT_LINE_COMMENT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{--.*?--\}"#).unwrap());
 
 static HTML_COMMENT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"<!--.*?-->"#).unwrap());
 
@@ -107,7 +109,7 @@ impl DocumentRegions {
             }
         }
 
-        // Find luat comments {/* */}
+        // Find luat block comments {/* */}
         for mat in LUAT_COMMENT_RE.find_iter(text) {
             regions.push(Region {
                 region_type: RegionType::LuatComment,
@@ -115,6 +117,18 @@ impl DocumentRegions {
                 end: mat.end(),
                 content: None,
             });
+        }
+
+        // Find luat line comments {-- --}
+        for mat in LUAT_LINE_COMMENT_RE.find_iter(text) {
+            if !Self::is_inside_region(&regions, mat.start()) {
+                regions.push(Region {
+                    region_type: RegionType::LuatComment,
+                    start: mat.start(),
+                    end: mat.end(),
+                    content: None,
+                });
+            }
         }
 
         // Find HTML comments

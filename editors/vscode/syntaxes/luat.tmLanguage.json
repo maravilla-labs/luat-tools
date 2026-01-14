@@ -5,6 +5,7 @@
   "patterns": [
     { "include": "#script-module" },
     { "include": "#script-regular" },
+    { "include": "#luat-line-comment" },
     { "include": "#luat-comment" },
     { "include": "#html-comment" },
     { "include": "#control-flow-if" },
@@ -50,6 +51,14 @@
       },
       "contentName": "source.lua",
       "patterns": [{ "include": "source.lua" }]
+    },
+    "luat-line-comment": {
+      "name": "comment.line.luat",
+      "begin": "\\{--",
+      "end": "--\\}",
+      "captures": {
+        "0": { "name": "punctuation.definition.comment.luat" }
+      }
     },
     "luat-comment": {
       "name": "comment.block.luat",

@@ -38,12 +38,48 @@ fn check_unclosed_braces(text: &str, doc: &Document) -> Vec<Diagnostic> {
     let mut diagnostics = Vec::new();
     let mut brace_depth = 0;
     let mut brace_start: Option<usize> = None;
+    let chars: Vec<char> = text.chars().collect();
+    let len = chars.len();
+    let mut i = 0;
 
-    for (i, ch) in text.char_indices() {
+    while i < len {
+        let ch = chars[i];
+
+        // Check for start of multi-line comment {/*
+        if ch == '{' && i + 2 < len && chars[i + 1] == '/' && chars[i + 2] == '*' {
+            // Skip until we find */}
+            i += 3;
+            while i + 2 < len {
+                if chars[i] == '*' && chars[i + 1] == '/' && chars[i + 2] == '}' {
+                    i += 3;
+                    break;
+                }
+                i += 1;
+            }
+            continue;
+        }
+
+        // Check for start of line comment {--
+        if ch == '{' && i + 2 < len && chars[i + 1] == '-' && chars[i + 2] == '-' {
+            // Skip until we find --}
+            i += 3;
+            while i + 2 < len {
+                if chars[i] == '-' && chars[i + 1] == '-' && chars[i + 2] == '}' {
+                    i += 3;
+                    break;
+                }
+                i += 1;
+            }
+            continue;
+        }
+
+        // Calculate byte offset for position conversion
+        let byte_offset: usize = chars[..i].iter().map(|c| c.len_utf8()).sum();
+
         match ch {
             '{' => {
                 if brace_depth == 0 {
-                    brace_start = Some(i);
+                    brace_start = Some(byte_offset);
                 }
                 brace_depth += 1;
             }
@@ -53,11 +89,11 @@ fn check_unclosed_braces(text: &str, doc: &Document) -> Vec<Diagnostic> {
                 }
             }
             '\n' => {
-                // If we have an unclosed brace at end of line (outside strings), report it
-                if brace_depth > 0 && !is_in_script_block(text, i) {
+                // If we have an unclosed brace at end of line (outside strings/scripts), report it
+                if brace_depth > 0 && !is_in_script_block(text, byte_offset) {
                     if let Some(start) = brace_start {
                         let start_pos = doc.offset_to_position(start);
-                        let end_pos = doc.offset_to_position(i);
+                        let end_pos = doc.offset_to_position(byte_offset);
                         diagnostics.push(Diagnostic {
                             range: Range {
                                 start: start_pos,
@@ -75,6 +111,7 @@ fn check_unclosed_braces(text: &str, doc: &Document) -> Vec<Diagnostic> {
             }
             _ => {}
         }
+        i += 1;
     }
 
     diagnostics
