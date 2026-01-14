@@ -7,6 +7,8 @@ use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, Position, Range};
 
 use crate::document::Document;
 
+// Useful for detecting unclosed braces at end of file
+#[allow(dead_code)]
 static UNCLOSED_BRACE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\{[^}]*$").unwrap());
 
 static CONTROL_FLOW_OPEN_RE: LazyLock<Regex> =

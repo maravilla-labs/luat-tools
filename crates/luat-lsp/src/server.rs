@@ -22,7 +22,9 @@ impl LuatLanguageServer {
         }
     }
 
-    pub fn get_document(&self, uri: &Url) -> Option<dashmap::mapref::one::Ref<Url, Document>> {
+    /// Get a document by URI (for external access)
+    #[allow(dead_code)] // Useful for future features like workspace-wide operations
+    pub fn get_document(&self, uri: &Url) -> Option<dashmap::mapref::one::Ref<'_, Url, Document>> {
         self.documents.get(uri)
     }
 }

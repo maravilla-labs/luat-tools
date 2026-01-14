@@ -35,6 +35,8 @@ impl Document {
         self.rope.to_string()
     }
 
+    /// Get the underlying rope for advanced text operations
+    #[allow(dead_code)] // Useful for future features like semantic tokens
     pub fn rope(&self) -> &Rope {
         &self.rope
     }
@@ -100,6 +102,7 @@ impl Document {
     }
 
     /// Get text in a range
+    #[allow(dead_code)] // Useful for future features like rename, extract refactoring
     pub fn get_text_range(&self, range: Range) -> Option<String> {
         let start = self.position_to_offset(range.start)?;
         let end = self.position_to_offset(range.end)?;

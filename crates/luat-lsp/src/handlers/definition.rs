@@ -11,6 +11,8 @@ static REQUIRE_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"local\s+(\w+)\s*=\s*require\s*\(\s*["']([^"']+)["']\s*\)"#).unwrap()
 });
 
+// Useful for finding component usages in template
+#[allow(dead_code)]
 static COMPONENT_TAG_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<([A-Z][A-Za-z0-9_]*)"#).unwrap());
 

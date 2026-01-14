@@ -6,8 +6,9 @@ use std::sync::LazyLock;
 
 /// Type of region in a .luat document
 #[derive(Debug, Clone, PartialEq)]
+#[allow(dead_code)] // Template variant reserved for future use
 pub enum RegionType {
-    /// HTML-like template markup
+    /// HTML-like template markup (reserved for future template-specific features)
     Template,
     /// Module script: <script module> or <script context="module">
     LuaScriptModule,
@@ -204,6 +205,7 @@ impl DocumentRegions {
     }
 
     /// Get all expression regions
+    #[allow(dead_code)] // Useful for lua-language-server integration
     pub fn expressions(&self) -> impl Iterator<Item = &Region> {
         self.regions
             .iter()
@@ -211,6 +213,7 @@ impl DocumentRegions {
     }
 
     /// Generate a virtual Lua document from all Lua regions
+    #[allow(dead_code)] // Useful for lua-language-server integration
     pub fn virtual_lua_document(&self) -> String {
         let mut doc = String::new();
 
