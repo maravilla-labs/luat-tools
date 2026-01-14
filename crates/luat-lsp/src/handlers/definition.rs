@@ -1,14 +1,15 @@
 // Copyright 2026 Maravilla Labs
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use tower_lsp::lsp_types::{GotoDefinitionResponse, Location, Position, Range, Url};
 use regex::Regex;
 use std::sync::LazyLock;
+use tower_lsp::lsp_types::{GotoDefinitionResponse, Location, Position, Range, Url};
 
 use crate::document::Document;
 
-static REQUIRE_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"local\s+(\w+)\s*=\s*require\s*\(\s*["']([^"']+)["']\s*\)"#).unwrap());
+static REQUIRE_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r#"local\s+(\w+)\s*=\s*require\s*\(\s*["']([^"']+)["']\s*\)"#).unwrap()
+});
 
 static COMPONENT_TAG_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"<([A-Z][A-Za-z0-9_]*)"#).unwrap());

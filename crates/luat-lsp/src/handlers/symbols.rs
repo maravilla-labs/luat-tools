@@ -1,9 +1,9 @@
 // Copyright 2026 Maravilla Labs
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use tower_lsp::lsp_types::{DocumentSymbol, DocumentSymbolResponse, Position, Range, SymbolKind};
 use regex::Regex;
 use std::sync::LazyLock;
+use tower_lsp::lsp_types::{DocumentSymbol, DocumentSymbolResponse, Position, Range, SymbolKind};
 
 use crate::document::Document;
 
@@ -62,7 +62,12 @@ pub fn get_document_symbols(doc: &Document) -> Option<DocumentSymbolResponse> {
                 for cap in COMPONENT_RE.captures_iter(content) {
                     if let Some(name_match) = cap.get(1) {
                         let name = name_match.as_str().to_string();
-                        if name.chars().next().map(|c| c.is_uppercase()).unwrap_or(false) {
+                        if name
+                            .chars()
+                            .next()
+                            .map(|c| c.is_uppercase())
+                            .unwrap_or(false)
+                        {
                             let offset_in_content = name_match.start();
                             let abs_offset = region.start + offset_in_content + "<script>".len();
                             let pos = doc.offset_to_position(abs_offset);
@@ -104,7 +109,10 @@ pub fn get_document_symbols(doc: &Document) -> Option<DocumentSymbolResponse> {
             let pos = doc.offset_to_position(full.start());
 
             // Check if already added as import
-            if !symbols.iter().any(|s| s.name == name && s.kind == SymbolKind::CLASS) {
+            if !symbols
+                .iter()
+                .any(|s| s.name == name && s.kind == SymbolKind::CLASS)
+            {
                 symbols.push(DocumentSymbol {
                     name: format!("<{}>", name),
                     detail: Some("component usage".to_string()),

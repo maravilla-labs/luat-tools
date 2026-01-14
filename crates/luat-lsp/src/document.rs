@@ -1,8 +1,8 @@
 // Copyright 2026 Maravilla Labs
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use tower_lsp::lsp_types::{Position, Range, TextDocumentContentChangeEvent, Url};
 use ropey::Rope;
+use tower_lsp::lsp_types::{Position, Range, TextDocumentContentChangeEvent, Url};
 
 use crate::regions::{DocumentRegions, Region};
 

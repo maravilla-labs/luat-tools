@@ -62,14 +62,11 @@ static DIRECTIVE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{@[^}]*\}
 
 // Note: regex crate doesn't support lookahead, so we match all braces
 // and filter out control flow/directives/comments in post-processing
-static MUSTACHE_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"\{[^}]+\}"#).unwrap());
+static MUSTACHE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{[^}]+\}"#).unwrap());
 
-static LUAT_COMMENT_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"\{/\*.*?\*/\}"#).unwrap());
+static LUAT_COMMENT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\{/\*.*?\*/\}"#).unwrap());
 
-static HTML_COMMENT_RE: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"<!--.*?-->"#).unwrap());
+static HTML_COMMENT_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"<!--.*?-->"#).unwrap());
 
 impl DocumentRegions {
     /// Parse a document into regions
@@ -93,9 +90,9 @@ impl DocumentRegions {
         for cap in SCRIPT_RE.captures_iter(text) {
             if let Some(full) = cap.get(0) {
                 // Check if this overlaps with a module script
-                let is_module = regions
-                    .iter()
-                    .any(|r| r.region_type == RegionType::LuaScriptModule && r.start == full.start());
+                let is_module = regions.iter().any(|r| {
+                    r.region_type == RegionType::LuaScriptModule && r.start == full.start()
+                });
 
                 if !is_module {
                     let content = cap.get(1).map(|m| m.as_str().to_string());

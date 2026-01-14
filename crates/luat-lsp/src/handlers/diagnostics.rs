@@ -1,9 +1,9 @@
 // Copyright 2026 Maravilla Labs
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, Position, Range};
 use regex::Regex;
 use std::sync::LazyLock;
+use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, Position, Range};
 
 use crate::document::Document;
 

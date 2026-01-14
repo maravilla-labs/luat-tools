@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use dashmap::DashMap;
-use tower_lsp::lsp_types::*;
 use tower_lsp::jsonrpc::Result;
+use tower_lsp::lsp_types::*;
 use tower_lsp::{Client, LanguageServer};
 
 use crate::document::Document;

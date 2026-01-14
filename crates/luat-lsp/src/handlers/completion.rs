@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use tower_lsp::lsp_types::{
-    CompletionItem, CompletionItemKind, Documentation, InsertTextFormat, MarkupContent,
-    MarkupKind, Position,
+    CompletionItem, CompletionItemKind, Documentation, InsertTextFormat, MarkupContent, MarkupKind,
+    Position,
 };
 
 use crate::document::Document;
