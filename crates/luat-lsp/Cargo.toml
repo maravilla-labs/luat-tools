@@ -1,0 +1,21 @@
+[package]
+name = "luat-lsp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Language server for Luat template files"
+
+[[bin]]
+name = "luat-lsp"
+path = "src/main.rs"
+
+[dependencies]
+tower-lsp = { workspace = true, features = ["proposed"] }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+dashmap.workspace = true
+ropey.workspace = true
+regex.workspace = true

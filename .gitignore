@@ -1,0 +1,16 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Node (VSCode extension)
+editors/vscode/node_modules/
+editors/vscode/out/
+editors/vscode/*.vsix

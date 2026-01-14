@@ -1,0 +1,83 @@
+{
+  "name": "luat-vscode",
+  "displayName": "Luat",
+  "description": "Language support for Luat template files",
+  "version": "0.1.0",
+  "publisher": "maravilla-labs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maravilla-labs/luat-tools"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:luat"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "luat",
+        "aliases": [
+          "Luat",
+          "luat"
+        ],
+        "extensions": [
+          ".luat"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "luat",
+        "scopeName": "source.luat",
+        "path": "./syntaxes/luat.tmLanguage.json",
+        "embeddedLanguages": {
+          "source.lua": "lua",
+          "text.html.basic": "html"
+        }
+      }
+    ],
+    "configuration": {
+      "title": "Luat",
+      "properties": {
+        "luat.server.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to luat-lsp binary. If empty, uses bundled or PATH."
+        },
+        "luat.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces communication between VS Code and the language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.0.0",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  }
+}

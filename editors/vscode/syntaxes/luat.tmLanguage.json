@@ -1,0 +1,298 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Luat",
+  "scopeName": "source.luat",
+  "patterns": [
+    { "include": "#script-module" },
+    { "include": "#script-regular" },
+    { "include": "#luat-comment" },
+    { "include": "#html-comment" },
+    { "include": "#control-flow-if" },
+    { "include": "#control-flow-each" },
+    { "include": "#control-flow-else" },
+    { "include": "#control-flow-end" },
+    { "include": "#directive" },
+    { "include": "#mustache" },
+    { "include": "#component-tag" },
+    { "include": "#html-tag" },
+    { "include": "#text" }
+  ],
+  "repository": {
+    "script-module": {
+      "begin": "(<)(script)(\\s+(?:module|context\\s*=\\s*\"module\"))(\\s*>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.script.html" },
+        "3": { "name": "entity.other.attribute-name.html" },
+        "4": { "name": "punctuation.definition.tag.end.html" }
+      },
+      "end": "(</)(script)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.script.html" },
+        "3": { "name": "punctuation.definition.tag.end.html" }
+      },
+      "contentName": "source.lua",
+      "patterns": [{ "include": "source.lua" }]
+    },
+    "script-regular": {
+      "begin": "(<)(script)(>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.script.html" },
+        "3": { "name": "punctuation.definition.tag.end.html" }
+      },
+      "end": "(</)(script)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.script.html" },
+        "3": { "name": "punctuation.definition.tag.end.html" }
+      },
+      "contentName": "source.lua",
+      "patterns": [{ "include": "source.lua" }]
+    },
+    "luat-comment": {
+      "name": "comment.block.luat",
+      "begin": "\\{/\\*",
+      "end": "\\*/\\}",
+      "captures": {
+        "0": { "name": "punctuation.definition.comment.luat" }
+      }
+    },
+    "html-comment": {
+      "name": "comment.block.html",
+      "begin": "<!--",
+      "end": "-->",
+      "captures": {
+        "0": { "name": "punctuation.definition.comment.html" }
+      }
+    },
+    "nested-braces": {
+      "begin": "\\{",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.braces.begin.lua" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.braces.end.lua" }
+      },
+      "patterns": [
+        { "include": "#nested-braces" },
+        { "include": "source.lua" }
+      ]
+    },
+    "lua-with-braces": {
+      "patterns": [
+        { "include": "#nested-braces" },
+        { "include": "source.lua" }
+      ]
+    },
+    "control-flow-if": {
+      "name": "meta.control.if.luat",
+      "begin": "(\\{)(#if|!if)\\b",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.embedded.begin.luat" },
+        "2": { "name": "keyword.control.flow.luat" }
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.embedded.end.luat" }
+      },
+      "contentName": "source.lua",
+      "patterns": [{ "include": "#lua-with-braces" }]
+    },
+    "control-flow-each": {
+      "name": "meta.control.each.luat",
+      "begin": "(\\{)(#each|!each)\\b",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.embedded.begin.luat" },
+        "2": { "name": "keyword.control.flow.luat" }
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.embedded.end.luat" }
+      },
+      "contentName": "source.lua",
+      "patterns": [
+        {
+          "match": "\\b(as)\\b",
+          "name": "keyword.control.as.luat"
+        },
+        { "include": "#lua-with-braces" }
+      ]
+    },
+    "control-flow-else": {
+      "patterns": [
+        {
+          "name": "meta.control.else-if.luat",
+          "begin": "(\\{)(:else\\s+if)\\b",
+          "beginCaptures": {
+            "1": { "name": "punctuation.section.embedded.begin.luat" },
+            "2": { "name": "keyword.control.flow.luat" }
+          },
+          "end": "(\\})",
+          "endCaptures": {
+            "1": { "name": "punctuation.section.embedded.end.luat" }
+          },
+          "contentName": "source.lua",
+          "patterns": [{ "include": "#lua-with-braces" }]
+        },
+        {
+          "name": "meta.control.else.luat",
+          "match": "(\\{)(:else|:empty)(\\})",
+          "captures": {
+            "1": { "name": "punctuation.section.embedded.begin.luat" },
+            "2": { "name": "keyword.control.flow.luat" },
+            "3": { "name": "punctuation.section.embedded.end.luat" }
+          }
+        }
+      ]
+    },
+    "control-flow-end": {
+      "name": "meta.control.end.luat",
+      "match": "(\\{)(/if|/each)(\\})",
+      "captures": {
+        "1": { "name": "punctuation.section.embedded.begin.luat" },
+        "2": { "name": "keyword.control.flow.luat" },
+        "3": { "name": "punctuation.section.embedded.end.luat" }
+      }
+    },
+    "directive": {
+      "name": "meta.directive.luat",
+      "begin": "(\\{)(@html|@local|@render)\\b",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.embedded.begin.luat" },
+        "2": { "name": "keyword.other.directive.luat" }
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.embedded.end.luat" }
+      },
+      "contentName": "source.lua",
+      "patterns": [{ "include": "#lua-with-braces" }]
+    },
+    "mustache": {
+      "name": "meta.embedded.expression.luat",
+      "begin": "(\\{)(?![#:/@!/*])",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.embedded.begin.luat" }
+      },
+      "end": "(\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.embedded.end.luat" }
+      },
+      "contentName": "source.lua",
+      "patterns": [{ "include": "#lua-with-braces" }]
+    },
+    "component-tag": {
+      "patterns": [
+        {
+          "name": "meta.tag.component.luat",
+          "begin": "(<)([A-Z][A-Za-z0-9_.-]*)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.component.luat support.class.component.luat" }
+          },
+          "end": "(/?>)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.end.html" }
+          },
+          "patterns": [{ "include": "#attributes" }]
+        },
+        {
+          "name": "meta.tag.component.luat",
+          "match": "(</?)([A-Z][A-Za-z0-9_.-]*)(>)",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.component.luat support.class.component.luat" },
+            "3": { "name": "punctuation.definition.tag.end.html" }
+          }
+        }
+      ]
+    },
+    "html-tag": {
+      "patterns": [
+        {
+          "name": "meta.tag.html",
+          "begin": "(<)([a-z][a-z0-9-]*)",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.html" }
+          },
+          "end": "(/?>)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.tag.end.html" }
+          },
+          "patterns": [{ "include": "#attributes" }]
+        },
+        {
+          "name": "meta.tag.html",
+          "match": "(</?)([a-z][a-z0-9-]*)(>)",
+          "captures": {
+            "1": { "name": "punctuation.definition.tag.begin.html" },
+            "2": { "name": "entity.name.tag.html" },
+            "3": { "name": "punctuation.definition.tag.end.html" }
+          }
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {
+          "name": "meta.attribute.dynamic.luat",
+          "begin": "([a-zA-Z_:@][a-zA-Z0-9_:.-]*)\\s*(=)\\s*(\\{)",
+          "beginCaptures": {
+            "1": { "name": "entity.other.attribute-name.html" },
+            "2": { "name": "punctuation.separator.key-value.html" },
+            "3": { "name": "punctuation.section.embedded.begin.luat" }
+          },
+          "end": "(\\})",
+          "endCaptures": {
+            "1": { "name": "punctuation.section.embedded.end.luat" }
+          },
+          "contentName": "source.lua",
+          "patterns": [{ "include": "#lua-with-braces" }]
+        },
+        {
+          "name": "meta.attribute.shorthand.luat",
+          "match": "(\\{)([a-zA-Z_][a-zA-Z0-9_]*)(\\})",
+          "captures": {
+            "1": { "name": "punctuation.section.embedded.begin.luat" },
+            "2": { "name": "variable.other.luat" },
+            "3": { "name": "punctuation.section.embedded.end.luat" }
+          }
+        },
+        {
+          "name": "meta.attribute.spread.luat",
+          "match": "(\\{)(\\.\\.\\.)(\\w+)(\\})",
+          "captures": {
+            "1": { "name": "punctuation.section.embedded.begin.luat" },
+            "2": { "name": "keyword.operator.spread.luat" },
+            "3": { "name": "variable.other.luat" },
+            "4": { "name": "punctuation.section.embedded.end.luat" }
+          }
+        },
+        {
+          "name": "meta.attribute.static.html",
+          "match": "([a-zA-Z_:@][a-zA-Z0-9_:.-]*)\\s*(=)\\s*(\"[^\"]*\"|'[^']*')",
+          "captures": {
+            "1": { "name": "entity.other.attribute-name.html" },
+            "2": { "name": "punctuation.separator.key-value.html" },
+            "3": { "name": "string.quoted.html" }
+          }
+        },
+        {
+          "name": "meta.attribute.boolean.html",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_-]*)\\b(?!=)",
+          "captures": {
+            "1": { "name": "entity.other.attribute-name.html" }
+          }
+        }
+      ]
+    },
+    "text": {
+      "match": "[^<{]+",
+      "name": "text.html"
+    }
+  }
+}
